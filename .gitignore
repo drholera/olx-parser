@@ -1,3 +1,9 @@
+# IDE cache files
+.idea
+
+# Files related to the project
+products.csv
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
