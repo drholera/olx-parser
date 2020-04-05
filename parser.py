@@ -1,13 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
-import pandas as pd
 
 
 class Parser(object):
     __url = ''
-    __products = []
-    __prices = []
-    __links = []
+    __results = []
 
     def __init__(self):
         search_query = input("Please, enter your search query \n")
@@ -32,8 +29,7 @@ class Parser(object):
                 soups = BeautifulSoup(pages.content, 'html.parser')
                 self.fill_data(soups)
 
-        df = pd.DataFrame({'Product Name': self.__products, 'Price': self.__prices, 'Rating': self.__links})
-        df.to_csv('products.csv', index=False, encoding='utf-8')
+        print(self.__results)
 
     def fill_data(self, soup: BeautifulSoup):
         ads = soup.find_all('table', class_='fixed')
@@ -44,9 +40,13 @@ class Parser(object):
                 price = ad.find('p', class_='price')
                 link = ad.find('a', class_='detailsLink')
                 if title.text and price.text and link.get('href'):
-                    self.__products.append(title.text)
-                    self.__prices.append(price.text)
-                    self.__links.append(link.get('href'))
+                    product_list = {
+                        'product': title.text.strip(),
+                        'price': price.text.strip(),
+                        'link': link.get('href').strip()
+                    }
+
+                    self.__results.append(product_list)
             except Exception as e:
                 continue
 
