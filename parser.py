@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import webbrowser
 import os
+import io
 
 
 class Parser(object):
@@ -47,12 +48,14 @@ class Parser(object):
                 title = ad.find('h3')
                 price = ad.find('p', class_='price')
                 link = ad.find('a', class_='detailsLink')
+                image = ad.find('img')
                 if title.text and price.text and link.get('href'):
                     link_href = link.get('href').strip()
                     product_list = {
                         'product': title.text.strip(),
                         'price': int(price.text.strip().replace(' ', '').replace('грн.', '')),
                         'link': '<a target="_blank" href={0}>{0}</a>'.format(link_href),
+                        'image': '<img src={} />'.format(image.get('src').strip())
                     }
 
                     self.__results.append(product_list)
@@ -78,9 +81,8 @@ class Parser(object):
         df.set_index('price')
 
         # Write html to file
-        text_file = open("results.html", "w+")
-        text_file.write(html_string.format(table=df.to_html(escape=False, classes='result-table')))
-        text_file.close()
+        with io.open('results.html', 'w', encoding='UTF-8') as f:
+            f.write(html_string.format(table=df.to_html(escape=False, classes='result-table')))
 
         webbrowser.open('file://' + os.path.realpath('results.html'))
 
