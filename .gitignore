@@ -3,6 +3,7 @@
 
 # Files related to the project
 products.csv
+results.html
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
