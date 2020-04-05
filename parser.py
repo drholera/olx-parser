@@ -29,6 +29,7 @@ class Parser(object):
                 soups = BeautifulSoup(pages.content, 'html.parser')
                 self.fill_data(soups)
 
+        self.__results = sorted(self.__results, key=lambda i: i['price'])
         print(self.__results)
 
     def fill_data(self, soup: BeautifulSoup):
